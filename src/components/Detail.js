@@ -1,15 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import styled from 'styled-components';
+import db from '../firebase';
 
 const Detail = () => {
+  const {id} = useParams();
+  const [movie, setMovie] = useState();
+  
+  useEffect(() => {
+    // Grab movie from db
+    db.collection("movies")
+      .doc(id)
+      .get()
+      .then((doc) => {
+        if(doc.exists) {
+          // save movie data
+          setMovie(doc.data());
+        } else {
+          //redirect to homepage
+          
+        }
+      })    
+  }, [id]);
+
+  console.log(movie);
+  
+  if(!movie) {
+    return <span>loading...</span>
+  }
+
   return (
     <Container>
       <Background>
-        <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/4F39B7E16726ECF419DD7C49E011DD95099AA20A962B0B10AA1881A70661CE45/scale?width=1440&aspectRatio=1.78&format=jpeg" alt="" />
+        <img src={movie.image} alt="" />
       </Background>
 
       <ImageTitle>
-        <img src="https://prod-ripcut-delivery.disney-plus.net/v1/variant/disney/D7AEE1F05D10FC37C873176AAA26F777FC1B71E7A6563F36C6B1B497CAB1CEC2/scale?width=1440&aspectRatio=1.78" alt="" />
+        <img src={movie.logo} alt="" />
       </ImageTitle>
 
       <Controls>
@@ -30,10 +57,10 @@ const Detail = () => {
       </Controls>
 
       <Subtitle>
-        2021 • 7m • Family, Fantasy, Kids, Animation
+        {movie.subtitle}
       </Subtitle>
       <Description>
-        Chinese mom suffering from empty nest syndrome gets another chance at motherhood when one of her dumplings springs to life as a lively, giggly dumpling boy.
+        {movie.description}
       </Description>
     </Container>
   )
@@ -43,8 +70,9 @@ export default Detail;
 
 const Container = styled.div`
   position: relative;
-  min-height: calc(100vh - 70px);
+  min-height: 100vh;
   padding: 0 calc(3.5vw + 5px);
+  padding-top: 70px;
 `;
 
 const Background = styled.div`
@@ -58,7 +86,7 @@ const Background = styled.div`
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.8;
+    opacity: 0.5;
   }
 `;
 

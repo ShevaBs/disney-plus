@@ -12,13 +12,13 @@ const Home = () => {
 
   useEffect(() => {
     db.collection("movies").onSnapshot((snapshot) => {
-      snapshot.docs.map( doc => {
-        return dispatch(setMovies({
-          id: doc.id, ...doc.data()
-        }))
+      const tempMovies = snapshot.docs.map( doc => {
+        return {  id: doc.id, ...doc.data() }
       });
-    })
-  }, [dispatch])
+
+      dispatch(setMovies(tempMovies));
+    });
+  }, [dispatch]);
 
   return (
     <Container>

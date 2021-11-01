@@ -19,7 +19,7 @@ const Login = () => {
 export default Login
 
 const Container = styled.div`
-  min-height: calc(100vh - 70px); 
+  min-height: 100vh; 
   background: url('/images/login-background.jpg') 0 70px / cover no-repeat fixed;
   display: grid;
   place-items: center;
